@@ -7,8 +7,9 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-        <meta-data android:name="com.google.android.maps.v2.API_KEY"
-            android:value="IzaSyAckud__F2pVrrjAWWPS992oggXheynjvM" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDjR4Sz5gJhqapam6DfSeRYGqRkCidP-I8" />
+        <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true"/>
 
 
 
