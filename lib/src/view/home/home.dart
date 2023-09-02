@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   Completer<GoogleMapController> _controller = Completer();
+
 
   static final CameraPosition _kGooglePlex =const CameraPosition(
       target: LatLng(31.3380959, 76.7611631),zoom: 15);
@@ -34,6 +36,19 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _marker.addAll(list);
   }
+
+
+  Future<Position> getUserCurrentLOcation() async{
+    await Geolocator.requestPermission().then((value){
+
+    }).onError((error, stackTrace) {
+      print("error"+error.toString());
+
+    });
+
+    return await Geolocator.getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +65,31 @@ class _HomePageState extends State<HomePage> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          GoogleMapController controller = await _controller.future;
-          controller.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(target:LatLng(36.2048, 138.2529),zoom: 10 )
-          ));
+          // GoogleMapController controller = await _controller.future;
+          // controller.animateCamera(CameraUpdate.newCameraPosition(
+          //   CameraPosition(target:LatLng(36.2048, 138.2529),zoom: 10 )
+          // ));
+
+          getUserCurrentLOcation().then((value) async {
+            print(value.latitude.toString() +" "+value.longitude.toString());
+
+            _marker.add(
+              Marker(markerId:MarkerId('2'),
+              position: LatLng(value.latitude,value.longitude))
+            );
+
+            CameraPosition cameraPosition = CameraPosition(zoom: 14,target:LatLng(value.latitude,value.longitude));
+
+            final GoogleMapController controller2 = await _controller.future;
+            controller2.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+            setState(() {
+
+            });
+
+          });
+
+
 
           setState(() {
 
